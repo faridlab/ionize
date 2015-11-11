@@ -1,0 +1,38 @@
+{
+  "name": "Seed",
+  "authors": [
+    "Farid Hidayat <e.faridhidayat@gmail.com>"
+  ],
+  "description": "Angular seed app",
+  "main": "index.html",
+  "moduleType": [
+    "amd",
+    "es6"
+  ],
+  "keywords": [
+    "angular",
+    "seed",
+    "seed",
+    "app"
+  ],
+  "license": "MIT",
+  "homepage": "http://kambeeng.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "angular": "~1.4.7",
+    "angular-animate": "~1.4.7",
+    "angular-cookies": "~1.4.7",
+    "angular-resource": "~1.4.7",
+    "angular-route": "~1.4.7",
+    "angular-sanitize": "~1.4.7",
+    "angular-touch": "~1.4.7",
+    "Materialize": "materialize#~0.97.2"
+  }
+}
