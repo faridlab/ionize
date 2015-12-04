@@ -33,32 +33,42 @@ angular.module('AppSeed')
       staging: null,
       testing: null,
       development: 'http://development.com/api',
+      bundle: 'http://bundle.com/api',
     },
 
     api: function(path, param) {
       var
       split = path.split('.'),
-      res = this.uri;
+      res = this.uri,
+      env = this.environment,
+      _param;
 
       for (var i = 0; i < split.length; i++) {
         res = res[split[i]];
       }
 
+      if(param){
+        if(typeof param === 'string') { // use as param
+          _param = param;
+        } else{ // as object
+          if(param.env) env = param.env;
+          if(param.param) _param = param.param;
+        }
+      }
+
       var
-      uri = this.path[this.environment] + res;
-      if(param) {
+      uri = this.path[env] + res;
+      if(_param) {
         return uri.concat('/', param);
       }
       return uri;
     },
 
     uri: {
-      quran: {
-        content:   '/content',
-        manifest:   '/content/manifest.json'
-      },
-      trans: {
-        content:   '/trans'
+      user: {
+        login:   '/user/login',
+        register:   '/user/register',
+        logout:   '/user/logout'
       }
     }
   })
