@@ -74,17 +74,23 @@ angular.module('AppSeed')
   })
 
 // set depedencies as you need from another module
-.config(['$routeProvider', 'const.Seed.route', function($routeProvider, seedRouter) {
+.config([
+  '$routeProvider',
+  'const.Seed.route',
+  'const.User.route',
 
-  var
-  param = [];
-  param = param.concat(seedRouter);
+  function($routeProvider, seedRouter, userRouter) {
 
-  for (var i in param) {
-    $routeProvider.when(param[i].url, param[i].option);
-  }
+    var
+    param = [];
+    param = param.concat(seedRouter);
+    param = param.concat(userRouter);
 
-  $routeProvider.otherwise({redirectTo: '/notfound'});
+    for (var i in param) {
+      $routeProvider.when(param[i].url, param[i].option);
+    }
+
+    $routeProvider.otherwise({redirectTo: '/notfound'});
 
 }]);
 

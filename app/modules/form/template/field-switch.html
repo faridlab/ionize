@@ -1,0 +1,11 @@
+<div class="input-field col s12 {{data.required|isRequired}}">
+  <div class="switch">
+    <label>
+      {{data.value[0].label}}
+      <input type="checkbox" id="{{data.id}}-switch" name="{{data.id}}">
+      <span class="lever"></span>
+      {{data.value[1].label}}
+    </label>
+  </div>
+  <label for="{{data.id}}-switch" class="active">{{data.label}}<sup ng-show="data.required|isRequired" class="red-text text-darken-2">*</sup></label>
+</div>

@@ -1,0 +1,11 @@
+<div class="input-field col s12 {{data.required|isRequired}}">
+  <input
+    id="{{data.id}}"
+    name="{{data.id}}"
+    type="number"
+    placeholder="{{data.placeholder}}"
+    value="{{data.value||''}}"
+    class="validate"
+    />
+  <label for="{{data.id}}" class="active">{{data.label}}<sup ng-show="data.required|isRequired" class="red-text text-darken-2">*</sup></label>
+</div>

@@ -1,0 +1,44 @@
+<div class="input-field col s6 {{data.required|isRequired}}">
+  <select name="{{data.id}}-month" id="{{data.id}}-month" class="browser-default">
+    <option value="" disabled selected>Month</option>
+    <option value="1">January</option>
+    <option value="2">February</option>
+    <option value="3">March</option>
+    <option value="4">April</option>
+    <option value="5">May</option>
+    <option value="6">June</option>
+    <option value="7">July</option>
+    <option value="8">August</option>
+    <option value="9">September</option>
+    <option value="10">October</option>
+    <option value="11">November</option>
+    <option value="12">December</option>
+  </select>
+  <label for="{{data.id}}-month" class="active">{{data.label}}<sup ng-show="data.required|isRequired" class="red-text text-darken-2">*</sup></label>
+</div>
+
+<div class="input-field col s3 {{data.required|isRequired}}">
+  <input
+    id="{{data.id}}-day"
+    name="{{data.id}}-day"
+    type="number"
+    placeholder="Day"
+    value=""
+    class="validate"
+    min="1"
+    max="31"
+    />
+</div>
+
+<div class="input-field col s3 {{data.required|isRequired}}">
+  <input
+    id="{{data.id}}-year"
+    name="{{data.id}}-year"
+    type="number"
+    placeholder="Year"
+    value=""
+    class="validate"
+    min="1900"
+    max="2015"
+    />
+</div>
