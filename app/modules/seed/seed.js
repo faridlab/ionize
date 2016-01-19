@@ -101,6 +101,17 @@ function FormController($scope, $log, $q, $http, $routeParams, $window, $locatio
         disabled: false,
       },
       {
+        id: 'email',
+        name: 'email',
+        value: null,
+        label: 'Your email',
+        type: 'email',
+        placeholder: 'youremail@mail.com',
+        required: true,
+        readonly: false,
+        disabled: false,
+      },
+      {
         id: 'password',
         name: 'password',
         value: null,
@@ -140,7 +151,111 @@ function FormController($scope, $log, $q, $http, $routeParams, $window, $locatio
         required: true,
         readonly: false,
         disabled: false,
-      }
+      },
+      {
+        id: 'siblings',
+        name: 'siblings',
+        value: null,
+        label: 'How many your siblings?',
+        type: 'number',
+        placeholder: 'number of your siblings (Optional)',
+        required: false,
+        readonly: false,
+        disabled: false,
+      },
+      {
+        id: 'graduate',
+        name: 'graduate',
+        label: 'Your last graduate',
+        value: [
+          {
+            label: "High School",
+            value: 1
+          },
+          {
+            label: "Bachelor",
+            value: 2
+          },
+          {
+            label: "Masters",
+            value: 3
+          },
+          {
+            label: "Ph.D",
+            value: 4
+          },
+        ],
+        type: 'select',
+        placeholder: "-- Graduate --",
+        required: false,
+        readonly: false,
+        disabled: false,
+      },
+      {
+        id: 'likes',
+        name: 'likes',
+        label: 'Which one you like most?',
+        value: [
+          {
+            label: "Bakso",
+            value: 1
+          },
+          {
+            label: "Indomie",
+            value: 2
+          },
+          {
+            label: "Mie Ayam",
+            value: 3
+          },
+          {
+            label: "Gratisan",
+            value: 4
+          },
+        ],
+        type: 'radio',
+        required: false,
+        readonly: false,
+        disabled: false,
+      },
+      {
+        id: 'hobbies',
+        name: 'hobbies',
+        label: 'Your hobbies?',
+        value: [
+          {
+            label: "Reading",
+            value: 1
+          },
+          {
+            label: "Eating",
+            value: 2
+          },
+          {
+            label: "Sleeping",
+            value: 3
+          },
+          {
+            label: "Walking around",
+            value: 4
+          },
+        ],
+        type: 'checkbox',
+        required: false,
+        readonly: false,
+        disabled: false,
+      },
+      {
+        id: 'biodata',
+        name: 'biodata',
+        value: null,
+        label: 'Biodata',
+        type: 'textarea',
+        placeholder: 'Your biodata...',
+        required: false,
+        readonly: false,
+        disabled: false,
+      },
     ]
   };
 
