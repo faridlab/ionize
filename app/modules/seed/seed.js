@@ -23,17 +23,17 @@ angular.module(MOD)
 }
 ])
 .constant('const.'+MOD+'.config', {
-  name: MOD
+  collections: MOD
 })
 
 
 // .CONTROLLERS
 .controller(MOD+'.home', [
-  '$scope', '$log', '$q', '$http', '$routeParams', '$window', '$location', 'appConfig',
+  '$scope', '$log', '$q', '$http', '$routeParams', '$window', '$location', 'config',
   SeedHomeController
 ])
 .controller(MOD+'.form', [
-  '$scope', '$log', '$q', '$http', '$routeParams', '$window', '$location', 'appConfig',
+  '$scope', '$routeParams',
   FormController
 ])
 
@@ -46,11 +46,11 @@ angular.module(MOD)
 
 });
 
-function SeedHomeController($scope, $log, $q, $http, $routeParams, $window, $location, appConfig) {
+function SeedHomeController($scope, $log, $q, $http, $routeParams, $window, $location, config) {
 
 }
 
-function FormController($scope, $log, $q, $http, $routeParams, $window, $location, appConfig) {
+function FormController($scope, $routeParams) {
 
   $scope.forms = {
     id: "idformuser",

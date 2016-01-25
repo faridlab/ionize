@@ -2,8 +2,8 @@
 
 'use strict';
 
-angular.module('AppSeed')
-.provider('appProvider', function(appConfig) {
+angular.module('App')
+.provider('appProvider', function(config) {
   this.foo = null;
   this.$get = function() {
     return this;

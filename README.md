@@ -10,7 +10,7 @@ Wrapping framework purpose to angular project
 	- Read
 	- Update
 	- Delete
-* User Modules
+* User Modules  
 	-	Login
 	-	Logout
 	- Register
@@ -27,3 +27,11 @@ Wrapping framework purpose to angular project
 		+ time
 		+ url
 		+ select (Drop down)
+
+
+
+#		Architecture
+##	Modules
+##	Providers
+##	Middlewares
+##

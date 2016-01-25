@@ -8,6 +8,14 @@ angular.module(MOD, ['ngRoute'])
 // .CONSTANT
 .constant('const.'+MOD+'.route', [
 {
+  url: '/user/profile',
+  option: {
+    templateUrl: 'app/modules/'+MOD.toLocaleLowerCase()+'/template/profile.html',
+    controller: MOD+'.profile',
+    controllerAs: MOD.toLocaleLowerCase()
+  }
+},
+{
   url: '/user/register',
   option: {
     templateUrl: 'app/modules/'+MOD.toLocaleLowerCase()+'/template/register.html',
@@ -22,35 +30,87 @@ angular.module(MOD, ['ngRoute'])
     controller: MOD+'.login',
     controllerAs: MOD.toLocaleLowerCase()
   }
+},
+{
+  url: '/user/password',
+  option: {
+    templateUrl: 'app/modules/'+MOD.toLocaleLowerCase()+'/template/password.html',
+    controller: MOD+'.password',
+    controllerAs: MOD.toLocaleLowerCase()
+  }
 }
 ])
 .constant('const.'+MOD+'.config', {
-  name: MOD
+  name: MOD,
+  isMocked: true, // change this config to get the real end point config
+  salt: 'b3n6', // salting
+})
+
+
+// .FACTORY
+.factory('userData', function() {
+  return {
+    data: null,
+    set: function(keyVal, val) {
+      if(arguments.length === 1) {
+        this.data = keyVal;
+      } else {
+        this.data[keyVal] = val;
+      }
+    },
+    get: function(key) {
+      if(arguments.length === 0) {
+        return this.data;
+      } else {
+        return this.data[key];
+      }
+    }
+  };
 })
 
 
 // .CONTROLLERS
 .controller(MOD+'.login', [
-  '$scope', '$log', '$q', '$http', '$routeParams', '$window', '$location', '$timeout',
+  '$scope', '$http', '$location', 'const.'+MOD+'.config', 'userData',
   UserLogin
 ])
 
 .controller(MOD+'.register', [
-  '$scope', '$log', '$q', '$http', '$routeParams', '$window', '$location', '$timeout',
+  '$scope', '$http', '$location', 'const.'+MOD+'.config',
   UserRegister
+])
+
+.controller(MOD+'.profile', [
+  '$scope', '$http', '$location', 'const.'+MOD+'.config', 'userData',
+  UserProfile
+])
+
+.controller(MOD+'.password', [
+  '$scope', '$http', '$location', 'const.'+MOD+'.config', 'userData',
+  UserPassword
 ])
 
 
 // .RUN
 // initial your module dependencies
-.run(function() {
+.run(['userData', '$location', function(userData, $location) {
+
   console.log('User module runnning...');
+
+  var
+  user = localStorage.getItem('user');
+  if(user) {
+    localStorage.setItem('user', user);
+    userData.set(JSON.parse(user));
+    $location.path('/');
+  } else {
+    $location.path('/user/login');
+  }
   // Do something right here, initial application open
+}]);
 
-});
 
-
-function UserLogin($scope, $log, $q, $http, $routeParams, $window, $location,$timeout) {
+function UserLogin($scope, $http, $location, config, userData) {
 
   var
   self = this;
@@ -63,32 +123,32 @@ function UserLogin($scope, $log, $q, $http, $routeParams, $window, $location,$ti
 
   self.onSubmit =  function() {
 
-    var
-    param = {};
-    param.username = self.username;
-    param.password = self.password;
+    if(config.isMocked) {
+      var
+      user = localStorage.getItem(self.username+'.'+self.password.substr(-3)+'.'+config.salt);
+      if(user) {
 
-    console.log(param);
+        localStorage.setItem('user', user);
+        userData.set(JSON.parse(user));
+        $location.path('/');
 
-    // Parse.User.logIn(param.username, param.password, {
-    //   success: function(user) {
-    //     $timeout(function(){
-    //       $location.path('/');
-    //     });
-    //   },
-    //   error: function(user, error) {
-    //     self.loading = false;
-    //     self.error = true;
-    //     self.errorMessage = error.message;
-    //   }
-    // });
-    // self.loading = true;
+      } else {
+        self.loading = false;
+        self.error = true;
+        self.errorMessage = 'User is not exists.';
+      }
+
+    } else {
+      self.loading = false;
+      self.error = true;
+      self.errorMessage = 'Please define the right end point.';
+    }
 
   };
 }
 
 
-function UserRegister($scope, $log, $q, $http, $routeParams, $window, $location, $timeout) {
+function UserRegister($scope, $http, $location, config) {
 
   var
   self = this;
@@ -110,29 +170,119 @@ function UserRegister($scope, $log, $q, $http, $routeParams, $window, $location,
     } else {
 
       self.loading = true;
+      if(config.isMocked) {
+        var
+        user = {
+          username: self.username,
+          password: self.password.substr(-3)+'.'+config.salt,
+          email: self.email,
+          first_name: self.first_name,
+          last_name: self.last_name
+        };
 
-      // var
-      // user = new Parse.User();
-      // user.set("username", self.username);
-      // user.set("password", self.password);
-      // user.set("email", self.email);
-      // user.set("first_name", self.first_name);
-      // user.set("last_name", self.last_name);
-      // user.signUp(null, {
-      //   success: function(user) {
-      //     $timeout(function(){
-      //       $location.path('/');
-      //     });
-      //     // TODO: give toast to inform user that s/he success to register
-      //   },
-      //   error: function(user, error) {
-      //     console.log(123456789);
-      //     self.loading = false;
-      //     self.error = true;
-      //     self.errorMessage = error.message;
-      //   }
-      // });
+        localStorage.setItem(self.username+'.'+self.password.substr(-3)+'.'+config.salt, JSON.stringify(user));
+        $location.path('/user/login');
+
+      } else {
+        self.loading = false;
+        self.error = true;
+        self.errorMessage = 'Please define the right end point.';
+      }
     }
+  };
+}
+
+function UserProfile($scope, $http, $location, config, userData) {
+
+  var
+  self = this;
+  self.username = userData.get('username');
+  self.password = userData.get('password');
+  self.email = userData.get('email');
+  self.first_name = userData.get('first_name');
+  self.last_name = userData.get('last_name');
+
+  self.errorMessage = '';
+  self.loading = false;
+  self.error = false;
+
+  self.onSubmit = function() {
+    self.loading = true;
+    if(config.isMocked) {
+      var
+      user = {
+        username: self.username,
+        password: userData.get('password'),
+        email: self.email,
+        first_name: self.first_name,
+        last_name: self.last_name
+      };
+
+      localStorage.setItem(self.username+'.'+userData.get('password'), JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(user));
+      userData.set(user);
+
+      self.loading = false;
+
+    } else {
+      self.loading = false;
+      self.error = true;
+      self.errorMessage = 'Please define the right end point.';
+    }
+
+  };
+}
+
+function UserPassword($scope, $http, $location, config, userData) {
+
+  var
+  self = this;
+  self.username = userData.get('username');
+  self.password = null;
+  self.oldpassword = null;
+  self.email = userData.get('email');
+  self.first_name = userData.get('first_name');
+  self.last_name = userData.get('last_name');
+
+  self.errorMessage = '';
+  self.loading = false;
+  self.error = false;
+
+  self.onSubmit = function() {
+    self.loading = true;
+    if(config.isMocked) {
+
+      if(self.oldpassword.trim().substr(-3)+'.'+config.salt !== userData.get('password')) {
+        self.error = true;
+        self.errorMessage = 'Old Password incorrect!.';
+      } else if(self.password.trim() !== self.password2.trim()) {
+        self.error = true;
+        self.errorMessage = 'New Password not matched';
+      } else {
+
+        var
+        user = {
+          username: self.username,
+          password: self.password.substr(-3)+'.'+config.salt,
+          email: self.email,
+          first_name: self.first_name,
+          last_name: self.last_name
+        };
+
+        localStorage.removeItem(self.username+'.'+userData.get('password'), JSON.stringify(user));
+        localStorage.setItem(self.username+'.'+self.password.substr(-3)+'.'+config.salt, JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(user));
+        userData.set(user);
+
+        self.loading = false;
+      }
+
+    } else {
+      self.loading = false;
+      self.error = true;
+      self.errorMessage = 'Please define the right end point.';
+    }
+
   };
 }
 
