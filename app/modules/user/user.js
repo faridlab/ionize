@@ -8,7 +8,7 @@ angular.module(MOD, ['ngRoute'])
 // .CONSTANT
 .constant('const.'+MOD+'.route', [
 {
-  url: '/user/profile',
+  uri: '/user/profile',
   option: {
     templateUrl: 'app/modules/'+MOD.toLocaleLowerCase()+'/template/profile.html',
     controller: MOD+'.profile',
@@ -16,7 +16,7 @@ angular.module(MOD, ['ngRoute'])
   }
 },
 {
-  url: '/user/register',
+  uri: '/user/register',
   option: {
     templateUrl: 'app/modules/'+MOD.toLocaleLowerCase()+'/template/register.html',
     controller: MOD+'.register',
@@ -24,7 +24,7 @@ angular.module(MOD, ['ngRoute'])
   }
 },
 {
-  url: '/user/login',
+  uri: '/user/login',
   option: {
     templateUrl: 'app/modules/'+MOD.toLocaleLowerCase()+'/template/login.html',
     controller: MOD+'.login',
@@ -32,7 +32,7 @@ angular.module(MOD, ['ngRoute'])
   }
 },
 {
-  url: '/user/password',
+  uri: '/user/password',
   option: {
     templateUrl: 'app/modules/'+MOD.toLocaleLowerCase()+'/template/password.html',
     controller: MOD+'.password',
@@ -96,21 +96,13 @@ angular.module(MOD, ['ngRoute'])
 .run(['userData', '$location', function(userData, $location) {
 
   console.log('User module runnning...');
-
-  var
-  user = localStorage.getItem('user');
-  if(user) {
-    localStorage.setItem('user', user);
-    userData.set(JSON.parse(user));
-    $location.path('/');
-  } else {
-    $location.path('/user/login');
-  }
   // Do something right here, initial application open
 }]);
 
 
 function UserLogin($scope, $http, $location, config, userData) {
+
+  console.log($scope);
 
   var
   self = this;
@@ -130,7 +122,7 @@ function UserLogin($scope, $http, $location, config, userData) {
 
         localStorage.setItem('user', user);
         userData.set(JSON.parse(user));
-        $location.path('/');
+        // $location.path('/');
 
       } else {
         self.loading = false;

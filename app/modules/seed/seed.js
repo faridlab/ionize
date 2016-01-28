@@ -8,17 +8,51 @@ angular.module(MOD)
 
 // .CONSTANT
 .constant('const.'+MOD+'.route', [{
-  url: '/',
+  uri: '/',
   option: {
     templateUrl: 'app/modules/seed/template/index.html',
     controller: MOD+'.home'
   }
 },
 {
-  url: '/form',
+  uri: '/form',
   option: {
     templateUrl: 'app/modules/seed/template/form.html',
     controller: MOD+'.form'
+  }
+},
+{
+  uri: '/:module/:id/add', // Routing for creating new item
+  option: {
+    templateUrl: 'app/modules/shared/template/add.html',
+    controller: MOD+'.add'
+  }
+},
+{
+  uri: '/:module/:id/read', // Routing for reading detail item
+  option: {
+    templateUrl: 'app/modules/shared/template/read.html',
+    controller: MOD+'.read'
+  }
+},
+{
+  uri: '/:module/:id/update', // Routing for updating the item by it's id
+  option: {
+    templateUrl: 'app/modules/shared/template/update.html',
+    controller: MOD+'.update'
+  }
+},
+{
+  uri: '/:module/:id/delete', // Routing for deleting an item by it's id
+  option: {
+    templateUrl: 'app/modules/shared/template/delete.html',
+    controller: MOD+'.delete'
+  }
+},
+{
+  uri: '/notfound',
+  option: {
+    templateUrl: 'app/modules/shared/template/404.html'
   }
 }
 ])
@@ -127,7 +161,7 @@ function FormController($scope, $routeParams) {
         name: 'birthdate',
         value: '',
         label: 'Birth day',
-        type: 'birthdate',
+        type: 'birthday',
         required: true,
         readonly: false,
         disabled: false,

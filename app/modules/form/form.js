@@ -64,8 +64,8 @@ angular.module(MOD, ['ngRoute'])
       case 'url':
         templateUrl += 'field-url.html';
       break;
-      case 'birthdate':
-        templateUrl += 'field-birthdate.html';
+      case 'birthday':
+        templateUrl += 'field-birthday.html';
       break;
       case 'switch':
         templateUrl += 'field-switch.html';

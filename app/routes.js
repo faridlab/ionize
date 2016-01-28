@@ -8,16 +8,19 @@ angular.module('App')
   '$routeProvider',
   'const.Seed.route',
   'const.User.route',
+  'config',
 
-  function($routeProvider, seedRouter, userRouter) {
-
+  function($routeProvider, seedRouter, userRouter, config) {
     var
-    param = [];
-    param = param.concat(seedRouter);
-    param = param.concat(userRouter);
+    routes = [];
+    routes = routes.concat(userRouter);
+    routes = routes.concat(seedRouter);
 
-    for (var i in param) {
-      $routeProvider.when(param[i].url, param[i].option);
+    for (var i in routes) {
+      var
+      option = routes[i].option;
+      option.resolve = config.middlewares;
+      $routeProvider.when(routes[i].uri, option);
     }
 
     $routeProvider.otherwise({redirectTo: '/notfound'});
