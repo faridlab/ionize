@@ -1,4 +1,6 @@
 <div class="input-field col s12 {{data.required|isRequired}}">
+  <label class="active">{{data.label}}<sup ng-show="data.required|isRequired" class="red-text text-darken-2">*</sup></label>
+  <br>
   <div class="switch">
     <label>
       {{data.value[0].label}}
@@ -7,6 +9,5 @@
       {{data.value[1].label}}
     </label>
   </div>
-  <label for="{{data.id}}-switch" class="active">{{data.label}}<sup ng-show="data.required|isRequired" class="red-text text-darken-2">*</sup></label>
 </div>
 <div class="input-field col s12"> &nbsp; </div>

@@ -25,11 +25,18 @@ angular.module(MOD)
 function SeedCreate($scope, $routeParams, Schema) {
   var
   self = $scope;
+
+  self.title = "New " + $routeParams.module;
+  $scope.forms = {};
   if(Schema.collections($routeParams.module)) { // ensure that collections is exists
-    self.forms = Schema.fetch();
-    console.log(self.forms);
+    $scope.forms = Schema.fetch();
   }
-  // console.log(Schema.get('$routeParams.module'));
+
+  $scope.onSubmit = function onSubmit() {
+    console.log('submitting...');
+    alert(2345564543523);
+  }
+
 }
 
 function SeedRead($scope, $routeParams) {

@@ -12,11 +12,11 @@ function Collections(Schema) {
   return {
     employee: {
       schema: {
-        'first_name': Schema.Text('first_name').required(true).create(),
-        'middle_name': Schema.Text('middle_name').placeholder('Middle name (optional)').create(),
-        'last_name': Schema.Text('last_name').required(true).create(),
-        nik: Schema.Number('nik').required(true).placeholder('Nomor Induk Karyawan.create(), ex:0091234').create(),
-        email: Schema.Email('email').required(true).placeholder('ex: bengbeng@think.web.id').create(),
+        'first_name': Schema.Text('first_name').required(true),
+        'middle_name': Schema.Text('middle_name').placeholder('Middle name (optional)'),
+        'last_name': Schema.Text('last_name').required(true),
+        nik: Schema.Number('nik').required(true).placeholder('Nomor Induk Karyawan, ex:0091234'),
+        email: Schema.Email('email').required(true).placeholder('ex: bengbeng@think.web.id'),
         gender: Schema.Switch('gender').required(true).value([
           // left value as default value
           {
@@ -28,8 +28,8 @@ function Collections(Schema) {
             label: "Female",
             value: 0
           }
-        ]).create(),
-        birthday: Schema.Birthday('birthday').required(true).create(),
+        ]),
+        birthday: Schema.Birthday('birthday').required(true),
         graduate: Schema.Dropdown('graduate').value([
           {
             label: "High School",
@@ -47,7 +47,7 @@ function Collections(Schema) {
             label: "Ph.D",
             value: 4
           },
-        ]).create(),
+        ]),
         status: Schema.Radio('status').required(true).value([
           {
             label: "Single",
@@ -61,7 +61,7 @@ function Collections(Schema) {
             label: "Jomblo",
             value: 3
           }
-        ]).create(),
+        ]),
         hobby: Schema.Checkbox('hobby').value([
           {
             label: "Reading",
@@ -79,8 +79,8 @@ function Collections(Schema) {
             label: "Walking around",
             value: 4
           },
-        ]).create(),
-        biodata: Schema.Textarea('biodata').placeholder('What\'s up..').create()
+        ]),
+        biodata: Schema.Textarea('biodata').placeholder('What\'s up..')
       },
       observers: [] // optional
     }
@@ -89,75 +89,75 @@ function Collections(Schema) {
 
 // Start of Schema Class
 function Schema() {
-  var
-  defaults = {
-    id: null,
-    name: null,
-    value: null,
-    label: null,
-    type: null,
-    placeholder: null,
-    required: false,
-    readonly: false,
-    disabled: false,
-    filter: null // required|string|...
-  },
-  option = {};
-
-  this.create = function () {
-    var result = option;
-    option = {};
-    return result;
-  };
 
   this.creator = function (id, option) {
     var
-    opt = angular.extend({id: id, name: id, label: id.replace('_', ' ')},  option);
-    this.set(opt);
-    return this;
+    defaults = {
+      id: null,
+      name: null,
+      value: null,
+      label: null,
+      type: null,
+      placeholder: null,
+      required: false,
+      readonly: false,
+      disabled: false,
+      filter: null // required|string|...
+    },
+    opt = angular.extend(defaults, {id: id, name: id, label: id.replace('_', ' ')},  option);
+    return new SchemaGenerator(opt);
   };
 
-  this.set = function () {
+  function SchemaGenerator (option) {
+    this.option = {};
+    this.set(option);
+  }
+
+  SchemaGenerator.prototype.generate = function () {
+    return this.option;
+  };
+
+  SchemaGenerator.prototype.set = function () {
     if(arguments.length === 1) {
-      option = angular.extend(defaults, option, arguments[0]);
+      this.option = angular.extend(this.option, arguments[0]);
     } else {
-      option[arguments[0]] = arguments[1];
+      this.option[arguments[0]] = arguments[1];
     }
     return this;
   };
 
-  this.filter = function (filter) {
-    this.set['filter'] = filter || null;
+  SchemaGenerator.prototype.filter = function (filter) {
+    this.set('filter', filter || null);
     return this;
   };
 
-  this.required = function (required) {
-    this.set['required'] = required || false;
+  SchemaGenerator.prototype.required = function (required) {
+    this.set('required', required || false);
     return this;
   };
 
-  this.label = function (label) {
-    this.set['label'] = label || false;
+  SchemaGenerator.prototype.label = function (label) {
+    this.set('label', label || null);
     return this;
   };
 
-  this.placeholder = function (placeholder) {
-    this.set['placeholder'] = placeholder || null;
+  SchemaGenerator.prototype.placeholder = function (placeholder) {
+    this.set('placeholder', placeholder || null);
     return this;
   };
 
-  this.value = function (value) {
-    this.set['value'] = value || null;
+  SchemaGenerator.prototype.value = function (value) {
+    this.set('value', value || null);
     return this;
   };
 
-  this.readonly = function (readonly) {
-    this.set['readonly'] = readonly || false;
+  SchemaGenerator.prototype.readonly = function (readonly) {
+    this.set('readonly', readonly || false);
     return this;
   };
 
-  this.disabled = function (disabled) {
-    this.set['disabled'] = disabled || false;
+  SchemaGenerator.prototype.disabled = function (disabled) {
+    this.set('disabled', disabled || false);
     return this;
   };
 
@@ -218,9 +218,9 @@ function SchemaCollections(collections) {
   this.fetch = function fetch() {
     var
     _fields = [],
-    schema = fields.schema;
-    for (var i in schema) {
-      _fields.push(schema[i]);
+    schemas = fields.schema;
+    for (var i in schemas) {
+      _fields.push(schemas[i].generate());
     }
     return {
       id: 'collectionsName',
