@@ -1,5 +1,5 @@
 <div class="input-field col s6 {{data.required|isRequired}}">
-  <select name="{{data.id}}-month" id="{{data.id}}-month" class="browser-default">
+  <select name="{{data.id}}-month" ng-model="data.month" id="{{data.id}}-month" class="browser-default">
     <option value="" disabled selected>Month</option>
     <option value="1">January</option>
     <option value="2">February</option>
@@ -24,6 +24,7 @@
     type="number"
     placeholder="Day"
     value=""
+    ng-model="data.day"
     class="validate"
     min="1"
     max="31"
@@ -36,6 +37,7 @@
     name="{{data.id}}-year"
     type="number"
     placeholder="Year"
+    ng-model="data.year"
     value=""
     class="validate"
     min="1900"

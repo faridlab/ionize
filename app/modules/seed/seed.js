@@ -54,12 +54,18 @@ angular.module(MOD)
   option: {
     templateUrl: 'app/modules/shared/template/404.html'
   }
+},
+{
+  uri: '/:module',
+  option: {
+    templateUrl: 'app/modules/shared/template/search.html',
+    controller: MOD+'.search'
+  }
 }
 ])
 .constant('const.'+MOD+'.config', {
   collections: MOD
 })
-
 
 // .CONTROLLERS
 .controller(MOD+'.home', [

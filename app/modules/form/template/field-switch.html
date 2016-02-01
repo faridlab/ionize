@@ -3,10 +3,16 @@
   <br>
   <div class="switch">
     <label>
-      {{data.value[0].label}}
-      <input type="checkbox" id="{{data.id}}-switch" name="{{data.id}}">
+      {{data.options[0].label}}
+      <input
+      type="checkbox"
+      id="{{data.id}}-switch"
+      ng-model="data.value"
+      ng-false-value="{{data.options[0].value}}"
+      ng-true-value="{{data.options[1].value}}"
+      name="{{data.id}}" />
       <span class="lever"></span>
-      {{data.value[1].label}}
+      {{data.options[1].label}}
     </label>
   </div>
 </div>

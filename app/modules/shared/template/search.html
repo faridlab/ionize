@@ -1,0 +1,12 @@
+<nav class="white">
+  <div class="nav-wrapper">
+    <a class="brand-logo teal-text">
+      {{title}}
+    </a>
+    <a href="#/" class="button-collapse"><i class="material-icons teal-text lighten-2">keyboard_backspace</i></a>
+    <a href="#/{{module}}/null/add" class="button-collapse right"><i class="material-icons teal-text lighten-2">add</i></a>
+  </div>
+</nav>
+<div class="collection">
+  <a href="#/{{module}}/{{key}}/read" class="collection-item" ng-repeat="(key, value) in lists">{{value.first_name}}</a>
+</div>

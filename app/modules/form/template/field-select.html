@@ -1,7 +1,7 @@
 <div class="input-field col s12 {{data.required|isRequired}}">
-  <select name="{{data.id}}" id="{{data.id}}-month" class="browser-default">
+  <select name="{{data.id}}" id="{{data.id}}-month" class="browser-default" ng-model="data.value">
     <option value="" disabled selected>{{data.placeholder}}</option>
-    <option value="{{val.value}}" ng-repeat="val in data.value">{{val.label}}</option>
+    <option value="{{val.value}}" ng-repeat="val in data.options">{{val.label}}</option>
   </select>
   <label for="{{data.id}}" class="active">{{data.label}}<sup ng-show="data.required|isRequired" class="red-text text-darken-2">*</sup></label>
 </div>

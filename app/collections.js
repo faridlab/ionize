@@ -5,19 +5,20 @@
 angular.module('App')
 .service('Schema', Schema)
 .factory('Collections', ['Schema', Collections])
-.service('SchemaCollections', ['Collections', SchemaCollections]);
+.factory('DataFactory', DataFactory)
+.service('SchemaCollections', ['Collections', '$q', SchemaCollections]);
 
 // configurable
 function Collections(Schema) {
   return {
     employee: {
       schema: {
-        'first_name': Schema.Text('first_name').required(true),
-        'middle_name': Schema.Text('middle_name').placeholder('Middle name (optional)'),
-        'last_name': Schema.Text('last_name').required(true),
+        first_name: Schema.Text('first_name').required(true),
+        middle_name: Schema.Text('middle_name').placeholder('Middle name (optional)'),
+        last_name: Schema.Text('last_name').required(true),
         nik: Schema.Number('nik').required(true).placeholder('Nomor Induk Karyawan, ex:0091234'),
         email: Schema.Email('email').required(true).placeholder('ex: bengbeng@think.web.id'),
-        gender: Schema.Switch('gender').required(true).value([
+        gender: Schema.Switch('gender').options([
           // left value as default value
           {
             label: "Male",
@@ -30,7 +31,7 @@ function Collections(Schema) {
           }
         ]),
         birthday: Schema.Birthday('birthday').required(true),
-        graduate: Schema.Dropdown('graduate').value([
+        graduate: Schema.Dropdown('graduate').options([
           {
             label: "High School",
             value: 1
@@ -48,7 +49,7 @@ function Collections(Schema) {
             value: 4
           },
         ]),
-        status: Schema.Radio('status').required(true).value([
+        status: Schema.Radio('status').required(true).options([
           {
             label: "Single",
             value: 1
@@ -62,7 +63,7 @@ function Collections(Schema) {
             value: 3
           }
         ]),
-        hobby: Schema.Checkbox('hobby').value([
+        hobby: Schema.Checkbox('hobby').options([
           {
             label: "Reading",
             value: 1
@@ -87,6 +88,33 @@ function Collections(Schema) {
   };
 }
 
+function DataFactory() {
+  return {
+    data: {},
+    add: function(collection, data) {
+      if(!this.data[collection]) this.data[collection] = [];
+      this.data[collection].push(data);
+      return true;
+    },
+    delete: function(collection, data) {
+      this.data[collection].splice(data, 1);
+      return true;
+    },
+    get: function(collection, index) {
+      if(arguments.length === 1){
+        return this.data[collection];
+      } else {
+        return this.data[collection][index];
+      }
+    },
+    set: function(collection, index, data) {
+      this.data[collection][index] = data;
+      return true;
+    }
+  };
+}
+
+
 // Start of Schema Class
 function Schema() {
 
@@ -102,6 +130,7 @@ function Schema() {
       required: false,
       readonly: false,
       disabled: false,
+      options: [],
       filter: null // required|string|...
     },
     opt = angular.extend(defaults, {id: id, name: id, label: id.replace('_', ' ')},  option);
@@ -161,6 +190,11 @@ function Schema() {
     return this;
   };
 
+  SchemaGenerator.prototype.options = function (options) {
+    this.set('options', options || []);
+    return this;
+  };
+
   // Form Creator
   this.Text = function (id) {
     return this.creator(id, {type: 'text'});
@@ -171,11 +205,11 @@ function Schema() {
   };
 
   this.Password = function (id) {
-    return this.creator(id, {type: 'password', placeholder: 'Create a password'});
+    return this.creator(id, {type: 'password', placeholder: 'Create a password', confirm: null});
   };
 
   this.Birthday = function (id) { // return value Y-m-d H:i:s
-    return this.creator(id, {type: 'birthday'});
+    return this.creator(id, {type: 'birthday', year: null, month: null, day: null});
   };
 
   this.Switch = function (id) {
@@ -204,18 +238,26 @@ function Schema() {
 }
 // End of Schema Class
 
-function SchemaCollections(collections) {
+
+function SchemaCollections(collections, $q) {
+
+  this.$q = $q;
+
   var
   fields = [];
+
+  this.collectionsName = null;
+
   this.collections = function getCollections(collectionsName) {
     fields = collections[collectionsName];
+    this.collectionsName = collectionsName;
     if (!fields) {
       return false;
     }
     return this;
   };
 
-  this.fetch = function fetch() {
+  this.generate = function generate() {
     var
     _fields = [],
     schemas = fields.schema;
@@ -223,20 +265,83 @@ function SchemaCollections(collections) {
       _fields.push(schemas[i].generate());
     }
     return {
-      id: 'collectionsName',
-      name: 'collectionsName',
+      id: this.collectionsName,
+      name: this.collectionsName,
       fields: _fields
     };
   };
 
 }
 
-SchemaCollections.prototype.methodName = function (name) {
-  console.log(name);
+
+SchemaCollections.prototype.fetch = function (fields) {
+  var
+  that = this,
+  collections = {};
+
+  return that.$q(function(resolve, reject) {
+    try {
+      for (var i in fields) {
+        switch (fields[i].type) {
+          case 'password':
+            collections[fields[i].id] = that.password(fields[i]);
+          break;
+
+          case 'switch':
+            collections[fields[i].id] = that.switch(fields[i]);
+          break;
+
+          case 'birthday':
+            collections[fields[i].id] = that.birthday(fields[i]);
+          break;
+
+          case 'checkbox':
+            collections[fields[i].id] = that.checkbox(fields[i]);
+          break;
+
+          default: // 'text', 'email', 'number', 'textarea'
+            collections[fields[i].id] = that.text(fields[i]);
+          break;
+        }
+      }
+      resolve(collections);
+    } catch (e) {
+      reject(e);
+    }
+  });
 };
 
-function Form() {
+SchemaCollections.prototype.text = function (data) {
+  return data.value || null;
+};
 
-}
+SchemaCollections.prototype.password = function (data) {
+  if(data.value !== data.confirm) {
+    throw new Error("Sorry, password no match!.");
+  }
+  return data.value;
+};
+
+SchemaCollections.prototype.switch = function (data) {
+  if(data.value === null) {
+    data.value = data.options[0].value;
+  }
+  return data.value;
+};
+
+SchemaCollections.prototype.birthday = function (data) {
+  return data.year+'-'+data.month+'-'+data.day;
+};
+
+SchemaCollections.prototype.checkbox = function (data) {
+  var
+  options = [];
+  for (var i in data.options) {
+    if (data.options[i].checked !== undefined) {
+      options.push(data.options[i].checked);
+    }
+  }
+  return options;
+};
 
 })();
