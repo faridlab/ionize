@@ -33,6 +33,13 @@ function SeedSearch($scope, $routeParams, Schema, DataFactory) {
   self.title = $routeParams.module;
   self.module = $routeParams.module;
   self.lists = DataFactory.get(self.module);
+  self.fieldName = null;
+  if(self.lists){
+    for (var i in self.lists[0]) {
+      self.fieldName = i;
+      break;
+    }
+  }
 
 }
 
