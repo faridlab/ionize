@@ -7,7 +7,7 @@ angular.module('App', [
   'Seed',
   'User',
   'Form',
-  'ngRoute',
+  'ngRoute'
 ])
 
 .run(function(config) {

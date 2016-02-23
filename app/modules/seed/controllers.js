@@ -40,7 +40,6 @@ function SeedSearch($scope, $routeParams, Schema, DataFactory) {
       break;
     }
   }
-
 }
 
 function SeedCreate($scope, $routeParams, Schema, DataFactory, $location) {

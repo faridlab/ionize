@@ -42,7 +42,7 @@ angular.module(MOD, ['ngRoute'])
 ])
 .constant('const.'+MOD+'.config', {
   name: MOD,
-  isMocked: true, // change this config to get the real end point config
+  isMocked: false, // change this config to get the real end point config
   salt: 'b3n6', // salting
 })
 
@@ -71,12 +71,12 @@ angular.module(MOD, ['ngRoute'])
 
 // .CONTROLLERS
 .controller(MOD+'.login', [
-  '$scope', '$http', '$location', 'const.'+MOD+'.config', 'userData',
+  '$scope', '$http', '$location', 'const.'+MOD+'.config', 'userData', 'api',
   UserLogin
 ])
 
 .controller(MOD+'.register', [
-  '$scope', '$http', '$location', 'const.'+MOD+'.config',
+  '$scope', '$http', '$location', 'const.'+MOD+'.config', 'api',
   UserRegister
 ])
 
@@ -100,9 +100,7 @@ angular.module(MOD, ['ngRoute'])
 }]);
 
 
-function UserLogin($scope, $http, $location, config, userData) {
-
-  console.log($scope);
+function UserLogin($scope, $http, $location, config, userData, api) {
 
   var
   self = this;
@@ -131,16 +129,41 @@ function UserLogin($scope, $http, $location, config, userData) {
       }
 
     } else {
-      self.loading = false;
-      self.error = true;
-      self.errorMessage = 'Please define the right end point.';
+
+      $http.get(api('user.login')+'?where='+JSON.stringify({username: self.username, password: self.password}), user,
+        {
+          headers: {
+            'Content-Type': 'text/plain'
+          }
+        }
+      )
+      .then(function successCallback(response) {
+
+        if(response.data.length) {
+          userData.set(response.data[0]);
+          localStorage.setItem('user', JSON.stringify(response.data[0]));
+          $location.path('/');
+        } else {
+          self.errorMessage = 'Username or Password incorrect!.';
+          self.error = true;
+          self.loading = false;
+        }
+
+        // localStorage.setItem(self.username+'.'+self.password.substr(-3)+'.'+config.salt, JSON.stringify(response));
+        // userData.set(JSON.parse(user));
+        // $location.path('/user/login');
+      }, function errorCallback(response) {
+        self.errorMessage = 'Username or Password incorrect!.';
+        self.error = true;
+        self.loading = false;
+      });
     }
 
   };
 }
 
 
-function UserRegister($scope, $http, $location, config) {
+function UserRegister($scope, $http, $location, config, api) {
 
   var
   self = this;
@@ -162,23 +185,36 @@ function UserRegister($scope, $http, $location, config) {
     } else {
 
       self.loading = true;
-      if(config.isMocked) {
-        var
-        user = {
-          username: self.username,
-          password: self.password.substr(-3)+'.'+config.salt,
-          email: self.email,
-          first_name: self.first_name,
-          last_name: self.last_name
-        };
+      var
+      user = {
+        username: self.username,
+        password: self.password,
+        email: self.email,
+        first_name: self.first_name,
+        last_name: self.last_name
+      };
 
+      if(config.isMocked) {
         localStorage.setItem(self.username+'.'+self.password.substr(-3)+'.'+config.salt, JSON.stringify(user));
         $location.path('/user/login');
-
       } else {
-        self.loading = false;
-        self.error = true;
-        self.errorMessage = 'Please define the right end point.';
+        self.loading = true;
+        $http.post(api('user.register'), user,
+          {
+            headers: {
+              'Content-Type': 'text/plain'
+            }
+          }
+        )
+        .then(function successCallback(response) {
+          console.log(response);
+          localStorage.setItem(self.username+'.'+self.password.substr(-3)+'.'+config.salt, JSON.stringify(user));
+          $location.path('/user/login');
+        }, function errorCallback(response) {
+          self.errorMessage = 'Username/Email already exists!.';
+          self.error = true;
+          self.loading = false;
+        });
       }
     }
   };

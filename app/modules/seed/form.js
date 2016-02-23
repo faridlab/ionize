@@ -21,7 +21,7 @@ angular.module(MOD, ['ngRoute'])
     restrict: 'EA',
     transclude: true,
     replace: true,
-    templateUrl: 'app/modules/'+MOD.toLocaleLowerCase()+'/template/form-generator.html'
+    templateUrl: 'app/modules/seed/template/form-generator.html'
   };
 })
 .directive('fieldGenerator', function($compile, $http, $q) {
@@ -29,7 +29,7 @@ angular.module(MOD, ['ngRoute'])
   var
   getTemplate = function(contentType){
     var
-    templateUrl = 'app/modules/'+MOD.toLocaleLowerCase()+'/template/';
+    templateUrl = 'app/modules/seed/template/';
     switch(contentType) {
       case 'textarea':
         templateUrl += 'field-textarea.html';
@@ -70,9 +70,9 @@ angular.module(MOD, ['ngRoute'])
       case 'switch':
         templateUrl += 'field-switch.html';
       break;
-      // case 'file':
-      //   templateUrl += '*.html';
-      // break;
+      case 'file':
+        templateUrl += 'field-file.html';
+      break;
       // case 'image':
       //   templateUrl += '*.html';
       // break;
@@ -103,7 +103,7 @@ angular.module(MOD, ['ngRoute'])
       elem.html(template).show();
       var
       elInput = elem[0].getElementsByTagName('input')[0];
-      if(scope.data.required) elInput.setAttribute('required', 'required');
+      if(scope.data.required && elInput) elInput.setAttribute('required', 'required');
       $compile(elem.contents())(scope);
     });
   };
@@ -112,7 +112,7 @@ angular.module(MOD, ['ngRoute'])
     restrict: 'E',
     replace: true,
     templateUrl: function(elem, attr) {
-      return 'app/modules/'+MOD.toLocaleLowerCase()+'/template/field-wrap.html';
+      return 'app/modules/seed/template/field-wrap.html';
     },
     link: linker
   };
