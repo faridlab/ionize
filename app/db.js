@@ -57,15 +57,15 @@ angular.module('App')
   };
 
   this.batch = function(sql, params, cb) {
-    this.db.transaction(function(tx) {
-      for (var i in params) {
-        tx.executeSql(sql, params[i], function(tx, res) {
-          // if(cb) cb(res);
-        }, function(e) {
-          if(cb) cb(null, e);
-        });
-      }
-      if(cb) cb(res);
+    var
+    batch = [];
+    for (var i in params) {
+      batch.push([sql, params[i]]);
+    }
+    this.db.sqlBatch(batch, function() {
+      if(cb) cb();
+    }, function(error) {
+      console.log('Populate table error: ' + error.message);
     });
   };
 
@@ -74,6 +74,5 @@ angular.module('App')
   };
 
 });
-
 
 })();
