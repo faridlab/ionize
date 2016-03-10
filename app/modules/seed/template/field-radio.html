@@ -12,4 +12,18 @@
     />
     <label for="{{data.id}}-{{index}}">{{val.label}}</label>
   </p>
+
+  <p ng-show="data.other">
+    <input
+    id="{{data.id}}-other"
+    name="{{data.id}}"
+    type="radio"
+    value="form-other"
+    ng-model="data.value"
+    class="validate"
+    />
+    <label for="{{data.id}}-other">Other</label>
+  </p>
+
+  <p ng-show="data.value == 'form-other'"><input ng-model="data.othervalue" type="text" placeholder="Other" /></p>
 </div>

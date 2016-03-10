@@ -11,77 +11,47 @@ angular.module('App')
 // configurable
 function Collections(Schema) {
   return {
-    employee: {
+    province: {
       schema: {
-        first_name: Schema.Text('first_name').required(true),
-        middle_name: Schema.Text('middle_name').placeholder('Middle name (optional)'),
-        last_name: Schema.Text('last_name').required(true),
-        nik: Schema.Number('nik').required(true).placeholder('Nomor Induk Karyawan, ex:0091234'),
-        email: Schema.Email('email').required(true).placeholder('ex: bengbeng@think.web.id'),
-        gender: Schema.Switch('gender').options([
-          // left value as default value
-          {
-            label: "Male",
-            value: 1
-          },
-          // Right value as default value
-          {
-            label: "Female",
-            value: 0
-          }
-        ]),
-        birthday: Schema.Birthday('birthday').required(true),
-        graduate: Schema.Dropdown('graduate').options([
-          {
-            label: "High School",
-            value: 1
-          },
-          {
-            label: "Bachelor",
-            value: 2
-          },
-          {
-            label: "Masters",
-            value: 3
-          },
-          {
-            label: "Ph.D",
-            value: 4
-          },
-        ]),
-        status: Schema.Radio('status').required(true).options([
-          {
-            label: "Single",
-            value: 1
-          },
-          {
-            label: "Married",
-            value: 2
-          },
-          {
-            label: "Jomblo",
-            value: 3
-          }
-        ]),
-        hobby: Schema.Checkbox('hobby').options([
-          {
-            label: "Reading",
-            value: 1
-          },
-          {
-            label: "Eating",
-            value: 2
-          },
-          {
-            label: "Sleeping",
-            value: 3
-          },
-          {
-            label: "Walking around",
-            value: 4
-          },
-        ]),
-        biodata: Schema.Textarea('biodata').placeholder('What\'s up..')
+        name: Schema.Text('name').placeholder('Nama Provinsi').label('Nama Provinsi'),
+      },
+      observers: [] // optional
+    },
+    city: {
+      schema: {
+        province: Schema.Dropdown('province').required(true).label('Provinsi').placeholder('Provinsi'),
+        name: Schema.Text('name').placeholder('Kabupaten/Kota').label('Kabupaten / Kota')
+      },
+      observers: [] // optional
+    },
+    location: {
+      schema: {
+        province: Schema.Text('province').required(true).label('Provinsi').placeholder('Provinsi'),
+        city: Schema.Text('city').placeholder('Kabupaten/Kota').label('Kabupaten / Kota'),
+        name: Schema.Text('name').placeholder('Nama Kawasan').label('Nama Kawasan'),
+        law: Schema.Textarea('law').placeholder('Dasar Hukum').label('Dasar Hukum'),
+        plan: Schema.Textarea('plan').placeholder('Rencana Pengelolaan').label('Rencana Pengelolaan'),
+        type: Schema.Text('type').placeholder('Tipe Kawasan').label('Tipe Kawasan'),
+        width: Schema.Number('width').placeholder('Luas Kawasan').label('Luas Kawasan'),
+        iucn: Schema.Text('iucn').placeholder('Kategori IUCN').label('Kategori IUCN'),
+        lintang: Schema.Text('lintang').placeholder('Garis Lintang').label('Garis Lintang'),
+        bujur: Schema.Text('bujur').placeholder('Garis Bujur').label('Garis Bujur'),
+        efektifitas: Schema.Textarea('efektifitas').placeholder('Efektifitas Pengelolaan').label('Efektifitas Pengelolaan'),
+        informasi: Schema.Textarea('informasi').placeholder('Informasi Tambahan').label('Informasi Tambahan'),
+        foto: Schema.File('foto').placeholder('Unggah berkas gambar...').label('Gambar'),
+        kondisi: Schema.Textarea('kondisi').placeholder('Kondisi Umum').label('Kondisi Umum'),
+        geografis: Schema.Text('geografis').placeholder('Letak Geografis').label('Letak Geografis'),
+        aksesibilitas: Schema.Text('aksesibilitas'),
+        iklim: Schema.Text('iklim'),
+        kondisiperairan: Schema.Text('kondisiperairan').placeholder('Kondisi Perairan').label('Kondisi Perairan'),
+        ekosistemair: Schema.Text('ekosistemair').placeholder('Kondisi Ekosistem Air').label('Kondisi Ekosistem Air'),
+        sosekobud: Schema.Textarea('sosekobud').placeholder('Kondisi Sosial Ekonomi Budaya').label('Kondisi Sosial Ekonomi Budaya'),
+        pencaharian: Schema.Text('pencaharian').placeholder('Mata Pencarian').label('Mata Pencarian'),
+        potensiperikanan: Schema.Text('potensiperikanan').placeholder('Potensi Perikanan').label('Potensi Perikanan'),
+        pendekatankonservasi: Schema.Text('pendekatankonservasi').placeholder('Pendekatan Konservasi').label('Pendekatan Konservasi'),
+        pariwisata: Schema.Text('pariwisata'),
+        longitude: Schema.Text('longitude'),
+        latitude: Schema.Text('latitude')
       },
       observers: [] // optional
     }
@@ -221,11 +191,11 @@ function Schema() {
   };
 
   this.Dropdown = function (id) {
-    return this.creator(id, {type: 'select'});
+    return this.creator(id, {type: 'select', placeholder: '--- Select ---'});
   };
 
   this.Radio = function (id) {
-    return this.creator(id, {type: 'radio'});
+    return this.creator(id, {type: 'radio', other: false});
   };
 
   this.Checkbox = function (id) {
@@ -234,6 +204,10 @@ function Schema() {
 
   this.Textarea = function (id) {
     return this.creator(id, {type: 'textarea'});
+  };
+
+  this.File = function (id) {
+    return this.creator(id, {type: 'file'});
   };
 }
 // End of Schema Class
@@ -256,6 +230,10 @@ function SchemaCollections(collections, $q) {
     }
     return this;
   };
+
+  this.getField = function getField(name){
+    return fields.schema[name];
+  }
 
   this.generate = function generate() {
     var
@@ -299,6 +277,10 @@ SchemaCollections.prototype.fetch = function (fields) {
             collections[fields[i].id] = that.checkbox(fields[i]);
           break;
 
+          case 'radio':
+            collections[fields[i].id] = that.radio(fields[i]);
+          break;
+
           default: // 'text', 'email', 'number', 'textarea'
             collections[fields[i].id] = that.text(fields[i]);
           break;
@@ -312,6 +294,13 @@ SchemaCollections.prototype.fetch = function (fields) {
 };
 
 SchemaCollections.prototype.text = function (data) {
+  return data.value || null;
+};
+
+SchemaCollections.prototype.radio = function (data) {
+  if(data.other && data.value === 'form-other') {
+    return data.othervalue || null;
+  }
   return data.value || null;
 };
 

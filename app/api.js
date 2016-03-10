@@ -8,18 +8,18 @@ angular.module('App')
   var
   api = {
     path: {
-      production: 'http://production.com/api',
+      production: null,
       staging: null,
       testing: null,
-      development: 'http://development.com/api',
+      development: 'http://localhost:1337',
       bundle: 'http://bundle.com/api',
     },
 
     uri: {
       user: {
-        login:   '/user/login',
-        register:   '/user/register',
-        logout:   '/user/logout'
+        login:    '/user',
+        register: '/user',
+        logout:   '/user'
       }
     }
   };
