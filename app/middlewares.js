@@ -45,7 +45,7 @@ angular.module('App')
       user = localStorage.getItem('user');
       if(user) {
         userData.set(JSON.parse(user));
-        refer.resolve(JSON.parse(user));
+        defer.resolve(JSON.parse(user));
       } else {
         $location.path('/user/login');
         defer.resolve();
