@@ -21,7 +21,7 @@ interface PageObj {
 @Component({
   templateUrl: 'build/app.html'
 })
-class ConferenceApp {
+class MobileApp {
   // the root nav is a child of the root app component
   // @ViewChild(Nav) gets a reference to the app's root nav
   @ViewChild(Nav) nav: Nav;
@@ -118,4 +118,4 @@ class ConferenceApp {
 // See the theming docs for the default values:
 // http://ionicframework.com/docs/v2/theming/platform-specific-styles/
 
-ionicBootstrap(ConferenceApp, [ConferenceData, UserData], { });
+ionicBootstrap(MobileApp, [ConferenceData, UserData], { });
