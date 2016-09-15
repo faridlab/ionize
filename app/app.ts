@@ -12,6 +12,7 @@ import { TutorialPage } from './pages/tutorial/tutorial';
 import { UserData } from './providers/user-data';
 
 import {RESTFul} from './providers/restful';
+import {Db} from './providers/db';
 
 interface PageObj {
   title: string;
@@ -24,13 +25,9 @@ interface PageObj {
   templateUrl: 'build/app.html'
 })
 class MobileApp {
-  // the root nav is a child of the root app component
-  // @ViewChild(Nav) gets a reference to the app's root nav
+
   @ViewChild(Nav) nav: Nav;
 
-  // List of pages that can be navigated to from the left menu
-  // the left menu only works after login
-  // the login page disables the left menu
   appPages: PageObj[] = [
     { title: 'Schedule', component: TabsPage, icon: 'calendar' },
     { title: 'Speakers', component: TabsPage, index: 1, icon: 'contacts' },
@@ -72,9 +69,6 @@ class MobileApp {
   }
 
   openPage(page: PageObj) {
-    // the nav component was found using @ViewChild(Nav)
-    // reset the nav to remove previous pages and only have this page
-    // we wouldn't want the back button to show in this scenario
     if (page.index) {
       this.nav.setRoot(page.component, {tabIndex: page.index});
 
@@ -83,7 +77,6 @@ class MobileApp {
     }
 
     if (page.title === 'Logout') {
-      // Give the menu time to close before changing to logged out
       setTimeout(() => {
         this.userData.logout();
       }, 1000);
@@ -110,14 +103,4 @@ class MobileApp {
   }
 }
 
-
-// Pass the main App component as the first argument
-// Pass any providers for your app in the second argument
-// Set any config for your app as the third argument, see the docs for
-// more ways to configure your app:
-// http://ionicframework.com/docs/v2/api/config/Config/
-// Place the tabs on the bottom for all platforms
-// See the theming docs for the default values:
-// http://ionicframework.com/docs/v2/theming/platform-specific-styles/
-
-ionicBootstrap(MobileApp, [RESTFul, ConferenceData, UserData], { });
+ionicBootstrap(MobileApp, [Db, RESTFul, ConferenceData, UserData], { });

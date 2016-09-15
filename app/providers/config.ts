@@ -6,6 +6,7 @@ export const ORGANIZATION = 'The Amazing Organization';
 export const ORGURL = 'http://example.com';
 export const PACKAGE = 'com.example';
 export const ENV = 'development'; // production, staging, testing, development
+export const DBNAME = 'app.db'; // production, staging, testing, development
 
 // EXPORT config
 export let config: any = {
