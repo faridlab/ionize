@@ -11,6 +11,8 @@ import { TabsPage } from './pages/tabs/tabs';
 import { TutorialPage } from './pages/tutorial/tutorial';
 import { UserData } from './providers/user-data';
 
+import {RESTFul} from './providers/restful';
+
 interface PageObj {
   title: string;
   component: any;
@@ -118,4 +120,4 @@ class MobileApp {
 // See the theming docs for the default values:
 // http://ionicframework.com/docs/v2/theming/platform-specific-styles/
 
-ionicBootstrap(MobileApp, [ConferenceData, UserData], { });
+ionicBootstrap(MobileApp, [RESTFul, ConferenceData, UserData], { });
