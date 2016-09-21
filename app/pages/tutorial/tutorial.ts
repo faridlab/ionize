@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-
 import { MenuController, NavController } from 'ionic-angular';
-
 import { TabsPage } from '../tabs/tabs';
+import { Db } from '../../providers/db';
+import { appConfigDefault } from '../../providers/config';
 
 
 interface Slide {
@@ -18,7 +18,11 @@ export class TutorialPage {
   slides: Slide[];
   showSkip = true;
 
-  constructor(public navCtrl: NavController, public menu: MenuController) {
+  constructor(
+    public navCtrl: NavController,
+    public menu: MenuController,
+    private db: Db
+  ) {
     this.slides = [
       {
         title: 'Welcome to <b>ICA</b>',
@@ -39,7 +43,15 @@ export class TutorialPage {
   }
 
   startApp() {
-    this.navCtrl.push(TabsPage);
+    this.db.get('appConfig')
+    .then(config => {
+      if (!config) {
+        let _config = appConfigDefault;
+        _config.intro = true;
+        this.db.set('appConfig', JSON.stringify(_config));
+      }
+      this.navCtrl.push(TabsPage);
+    });
   }
 
   onSlideChangeStart(slider) {

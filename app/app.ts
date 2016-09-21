@@ -49,7 +49,8 @@ class MobileApp {
     public userData: UserData,
     public menu: MenuController,
     platform: Platform,
-    confData: ConferenceData
+    confData: ConferenceData,
+    private db: Db
   ) {
     // Call any initial plugins when ready
     platform.ready().then(() => {
@@ -66,6 +67,15 @@ class MobileApp {
     });
 
     this.listenToLoginEvents();
+    this.db.get('appConfig')
+    .then(config => {
+      if (config) {
+        let _config = JSON.parse(config);
+        if (_config.intro) {
+          this.rootPage = TabsPage;
+        }
+      }
+    });
   }
 
   openPage(page: PageObj) {
