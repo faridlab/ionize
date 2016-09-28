@@ -6,7 +6,8 @@ export const ORGANIZATION = 'The Amazing Organization';
 export const ORGURL = 'http://example.com';
 export const PACKAGE = 'com.example';
 export const ENV = 'development'; // production, staging, testing, development
-export const DBNAME = 'app.db'; // production, staging, testing, development
+export const DBNAME = 'app.db';
+export const TAG = ':: TAG >> ';
 
 // EXPORT config
 export let config: any = {
@@ -18,23 +19,7 @@ export let config: any = {
   url: ORGURL,
   package:  PACKAGE,
   environment: ENV,
-  TAG: '::APP:: ',
-  token: null,
-  path: {
-    production: 'http://api.example.com',
-    staging: null,
-    testing: 'http://api.example.com',
-    development: 'http://api.example.com',
-  },
-  uri: {
-    user: {
-      login:    '/user/login',
-      register: '/user/register',
-      logout:   '/user/logout',
-      forgot:   '/user/forgot',
-      profile:  '/user/profile'
-    },
-  }
+  token: null
 };
 
 // EXPORT appConfigDefault
