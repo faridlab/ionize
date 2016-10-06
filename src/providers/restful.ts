@@ -39,8 +39,7 @@ export class RESTFul {
 
     return new Promise((resolve, reject) => {
        this.http.get(url, options)
-        .map(res => res)
-        // .map(res => res.json())
+        .map(res => res.json())
         .subscribe(
           data => {
             resolve(data);
@@ -69,9 +68,7 @@ export class RESTFul {
         _headers[i] = opt['headers'][i];
       }
     }
-
-    console.log(_headers);
-
+    
     let body = JSON.stringify(data);
     let headers = new Headers(_headers);
     let options = new RequestOptions({
