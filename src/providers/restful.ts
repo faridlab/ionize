@@ -21,8 +21,6 @@ export class RESTFul {
 
   get(url: string, param?: any, opt?: any) {
     let params = new URLSearchParams();
-    // Predefined params
-    // params.set('token', this.user.token);
     if (param) {
       for (let i in param) {
         let _param: any = param[i];
@@ -59,8 +57,13 @@ export class RESTFul {
   post(url: string, data?: any, opt?: any) {
 
     let params = new URLSearchParams();
-    // Predefined params
-    // params.set('token', this.user.token);
+    if (opt && opt['param']) {
+      for (let i in opt['param']) {
+        let _param: any = opt['param'][i];
+        if (typeof _param === 'object') _param = JSON.stringify(_param);
+        params.set(i, _param);
+      }
+    }
 
     let _headers = { 'Content-Type': 'application/json' };
     if (opt && opt['headers']) {
@@ -68,7 +71,7 @@ export class RESTFul {
         _headers[i] = opt['headers'][i];
       }
     }
-    
+
     let body = JSON.stringify(data);
     let headers = new Headers(_headers);
     let options = new RequestOptions({
