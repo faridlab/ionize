@@ -28,8 +28,13 @@ export class RESTFul {
         params.set(i, _param);
       }
     }
-
-    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let _headers = { 'Content-Type': 'application/json' };
+    if (opt && opt['headers']) {
+      for (let i in opt['headers']) {
+        _headers[i] = opt['headers'][i];
+      }
+    }
+    let headers = new Headers(_headers);
     let options = new RequestOptions({
                                       headers: headers,
                                       search: params
