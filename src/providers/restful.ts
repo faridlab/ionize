@@ -81,7 +81,7 @@ export class RESTFul {
 
     return new Promise((resolve, reject) => {
       this.http.post(url, body, options)
-        .map(res => res)
+        .map(res => res.json())
         .subscribe(
           data => {
             resolve(data);
