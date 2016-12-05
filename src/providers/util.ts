@@ -1,3 +1,5 @@
+import { Network } from 'ionic-native';
+
 export function uniqid(pr = '', en = false) {
   let result: any;
   let seed = function (s, w) {
@@ -18,4 +20,26 @@ export function convertoCurrency(val) {
 
 export function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+let states = {
+  unknown: 'Unknown connection',
+  ethernet: 'Ethernet connection',
+  wifi: 'WiFi connection',
+  '2g': 'Cell 2G connection',
+  '3g': 'Cell 3G connection',
+  '4g': 'Cell 4G connection',
+  'cellular': 'Cell generic connection',
+  none: 'No network connection'
+};
+
+export function checkConnection() {
+  let networkState = Network.connection;
+  return new Promise((resolve, reject) => {
+    if(networkState === 'none') {
+      reject(states[networkState]);
+    } else {
+      resolve(states[networkState]);
+    }
+  });
 }

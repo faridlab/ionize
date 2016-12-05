@@ -1,44 +1,12 @@
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { Injectable } from '@angular/core';
 
 export class Model {
+  id: number;
+  private attributes: any;
 
-  storage: any;
-
-  /**
-   * Constants type of field
-   */
-  static SINGLELINE: string  = 'singleline';
-  static MULTILINE: string  = 'multiline';
-  static PASSWORD: string  = 'password';
-  static NUMBER: string  = 'number';
-  static EMAIL: string  = 'email';
-
-  name: string; // Model name not an object of Model itself
-  attributes: any;
-  data: any = {};
-
-  constructor(
-    private http: Http
-  ) {
-    this.initialize();
-  }
-
-  private initialize() {
-    this.extractAttr();
-  }
-
-  /**
-   * Extractor attributes to data of model
-   * @return {[type]} [description]
-   */
-  private extractAttr() {
-    if (this.attributes) {
-      this.data['id'] = null;
-      for (let i in this.attributes) {
-        this.data[i] = null;
-      }
-    }
+  constructor(attrs: any = null) {
+    if(attrs) this.set(attrs);
   }
 
   /**
@@ -55,40 +23,49 @@ export class Model {
 
   /**
    * [Check if this model has an attribute]
-   * @param  {string} key [description]
-   * @return {any}        [description]
+   * @param  {string} key data object
+   * @return {boolean}    result
    */
-  has(key: string): any {}
+  has(key: string): boolean {
+    if(Object.keys(this.attributes).indexOf(key) > 0) return true
+    return false;
+  }
 
   /**
    * Get a value of item selected by key
    * @param  {string} key [description]
    * @return {any}        [description]
    */
-  get(key?: string): any {}
+  get(key: string = null): any {
+    if(!key) return this.attributes;
+    return this.attributes[key];
+  }
+
+  /**
+   * alias method for get()
+   * @return {[type]} [description]
+   */
+  getAttributes(): any {
+    return this.get();
+  }
 
   /**
    * Set valu of model's attribute by its key
    * @param {string} key   [description]
    * @param {any}    value [description]
    */
-  set(key: string, value: any): void {}
-
+  set(keyOrVal: any, value?: any): void {
+    if(typeof keyOrVal === 'string' && value) {
+      this.attributes[keyOrVal] = value;
+      this[keyOrVal] = value;
+    } else if(keyOrVal instanceof Object) {
+      this.attributes = keyOrVal;
+      for (let i in keyOrVal) {
+        this[i] = keyOrVal[i];
+      };
+    }
+  }
 }
 
-
-class User extends Model {
-
-  name: 'user';
-
-  attributes: any = {
-    username: Model.SINGLELINE,
-    password: Model.PASSWORD,
-    email: Model.EMAIL,
-    name: Model.SINGLELINE,
-    age: Model.NUMBER,
-    address: Model.MULTILINE
-  };
-
-
-}
+@Injectable()
+export class BaseModel extends Model {}

@@ -1,13 +1,14 @@
-export const APPNAME = '';
-export const DESC = '';
+export const APPNAME = 'Application Name';
+export const DESC = 'Application description';
 export const VERSION = 'v0.0.1';
 export const VERSIONCODE = 1;
-export const ORGANIZATION = '';
-export const ORGURL = 'http://faridlab.com';
-export const PACKAGE = 'com.faridlab';
+export const ORGANIZATION = 'Organization name';
+export const ORGURL = 'http://yourdomain.com';
+export const PACKAGE = 'com.yourdomain';
 export const ENV = 'development'; // production, staging, testing, development
 export const DBNAME = 'app.db';
-export const TAG = ':: TAG >> ';
+export const TAG = `::${APPNAME}:: >> `;
+export const TOKEN = null;
 
 // EXPORT config
 export let config: any = {
@@ -19,13 +20,20 @@ export let config: any = {
   url: ORGURL,
   package:  PACKAGE,
   environment: ENV,
-  token: null
+  token: TOKEN
 };
 
-// EXPORT appConfigDefault
+ // Appllication default configuration, arabic text, language, etc
 export let appConfigDefault: any = {
   intro: false,
-  setting: {
-    lang: 'en',
-  }
+  user: null,
+  lang: 'en',
 };
+
+export function getToken() {
+  return config.token;
+}
+
+export function getAppConfigDefault() {
+  return appConfigDefault;
+}

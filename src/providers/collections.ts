@@ -1,41 +1,14 @@
-import { Http } from '@angular/http';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import {Model} from './model';
-import {Db} from './db';
+import { Collection } from './collection';
+// import {ExampleModel} from './models'
 
-export class Collections {
-
-  private model: Model;
-  private sql: string;
-  private fieldsTypes: Array<string> = ['singleline', 'multiline', 'password', 'email'];
-
-  constructor(
-    private http: Http,
-    private db: Db
-  ) {
-    this.initialize();
+// FIXME: this line below is another collection sample, remove if you do not need this
+@Injectable()
+export class ExampleCollections extends Collection  {
+  public collections: {string?: Array<any>} = {};
+  public resetValue: any = {};
+  constructor() {
+    super();
   }
-
-  private initialize() {
-    let tables = [], attr = this.model.attributes;
-    for (let i in attr) {
-      let _type;
-      if (this.fieldsTypes.indexOf(attr[i]) >= 0) {
-        _type = `${i} TEXT`;
-      } else {
-        _type = `${i}  INTEGER`;
-      }
-      tables.push(_type);
-    }
-    let fields = tables.join(',');
-    this.sql = `CREATE TABLE IF NOT EXISTS ${this.model.name} (id INTEGER PRIMARY KEY AUTOINCREMENT, ${fields})`;
-  }
-
-  public setModel(model) {
-    if (!(model instanceof Model)) throw new Error('model must be instanceof Model!.');
-    this.model = model;
-  }
-
-  public sync(): void {}
-
 }
